@@ -1,2 +1,2 @@
 # Santander
-kaggle compethition
+kaggle competition
