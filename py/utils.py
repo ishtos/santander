@@ -98,3 +98,4 @@ def reduce_mem_usage(df):
     print('Decreased by {:.1f}%'.format(100 * (start_mem - end_mem) / start_mem))
 
     return df
+
