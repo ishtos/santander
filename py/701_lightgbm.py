@@ -24,8 +24,8 @@ from tqdm import tqdm
 from collections import defaultdict
 from multiprocessing import cpu_count
 
-from sklearn.model_selection import Stratifiedkfold, kfold
-from sklearn.metrics import roc_auc_curve
+from sklearn.model_selection import StratifiedKFold, KFold 
+from sklearn.metrics import roc_auc_score
 
 utils.start(__file__)
 #==============================================================================
@@ -112,7 +112,7 @@ params = {
 # =============================================================================
 # CV
 # =============================================================================
-skf = Stratifiedkfold(n_splits=NFOLDS, shuffle=True, random_state=SEED)
+skf = StratifiedKFold(n_splits=NFOLDS, shuffle=True, random_state=SEED)
 
 oof = np.zeros(len(X))
 predictions = np.zeros(len(X_test))
