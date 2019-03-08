@@ -126,7 +126,7 @@ for fold, (train_index, valid_index) in enumerate(skf.split(X, y)):
     
     model = xgb.train(params, dtrain, evals=[(dtrain, 'train'), (dvalid, 'valid')], **params_in_train)
     oof[valid_index] = model.predict(dvalid, ntree_limit=model.best_ntree_limit)
-    scores.append(roc_auc_score(y.iloc[train.index], oof[valid_index])**0.5)
+    scores.append(roc_auc_score(y.iloc[valid_index], oof[valid_index])**0.5)
 
     predictions += model.predict(xgb.DMatrix(data=X_test), ntree_limit=model.best_ntree_limit) / NFOLDS
 
