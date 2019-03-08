@@ -18,11 +18,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import catboost as cat
 
 from tqdm import tqdm
 from collections import defaultdict
 from multiprocessing import cpu_count
+from catboost import Pool, CatBoost
 
 from sklearn.model_selection import StratifiedKFold, KFold 
 from sklearn.metrics import roc_auc_score
@@ -81,32 +81,23 @@ X_test = test[use_cols]
 # PARAMS
 # =============================================================================
 params_in_train = {
-    'num_boost_round': 10000,
     'early_stopping_rounds': 200,
     'verbose_eval': 500,
+    'use_best_model': True,
 }
 
 params = {
     'boosting': 'gbdt',
-    'metric': 'auc',
-    'objective': 'binary',
-    'max_depth': -1,
-    'num_leaves': 9,
-    'min_data_in_leaf': 32,
-    'bagging_freq': 5,
+    'bootstrap_type': 'bayesian',
+    'eval_metric': 'AUC',
+    'objective': 'Logloss',
+    'iterations': 10000,
+    'max_depth': 6,
     'learning_rate': 0.01,
-    'feature_fraction': 0.8,
-    'bagging_fraction': 0.8,
-    'sub_sample': 0.6,
-    'reg_alpha': 2,
-    'reg_lambda': 5,
-    'min_gain_to_split': 0.01,
-    'min_child_wight': 19,
-    'num_threads': cpu_count(),
+    # 'subsample': 0.6,
+    'thread_count': cpu_count(),
     'verbose': -1,
-    'seed': SEED, # int(2**fold_n),
-    'bagging_seed': SEED, # int(2**fold_n),
-    'drop_seed': SEED, # int(2**fold_n),
+    'random_seed': SEED, # int(2**fold_n),
 }
 
 # =============================================================================
@@ -121,10 +112,11 @@ scores = []
 for fold, (train_index, valid_index) in enumerate(skf.split(X, y)):
     print('fold: {}/{}'.format(fold+1, skf.n_splits))
     
-    dtrain = cat.DMatrix(data=X.iloc[train_index], label=y.iloc[train_index])
-    dvalid = cat.DMatrix(data=X.iloc[valid_index], label=y.iloc[valid_index])
+    dtrain = Pool(data=X.iloc[train_index], label=y.iloc[train_index])
+    dvalid = Pool(data=X.iloc[valid_index], label=y.iloc[valid_index])
     
-    model = cat.train(params, dtrain, evals=[(dtrain, 'train'), (dvalid, 'valid')], **params_in_train)
+    model = CatBoost(params)
+    model = model.fit(dtrain, eval_set=[dtrain, dvalid], **params_in_train)
     oof[valid_index] = model.predict(dvalid, ntree_limit=model.best_ntree_limit)
     scores.append(roc_auc_score(y.iloc[valid_index], oof[valid_index])**0.5)
 
