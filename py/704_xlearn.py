@@ -2,19 +2,23 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Mar 4 2019
+
 @author: toshiki.ishikawa
 """
-
-import os 
+import os
+import gc 
 import sys
-import gc
+import datetime
 import utils
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 import xlearn as xl
 
 from tqdm import tqdm
+from multiprocessing import cpu_count
 
 utils.start(__file__)
 # =============================================================================
@@ -23,7 +27,7 @@ INPUTS_PATH = os.path.join('..', 'input')
 OUTPUTS_PATH = os.path.join('..', 'output')
 SUBMISSION_PATH = os.path.join('..', 'submission')
 
-NFOLDS = 6
+NFOLDS = 11
 
 param = {
     'task': 'binary',
@@ -38,7 +42,6 @@ param = {
 # =============================================================================
 # MODEL 
 # =============================================================================
-
 for i in range(NFOLDS):
     ffm_model = xl.create_ffm()
     ffm_model.setTrain(os.path.join(DATA_PATH, f'train_fold{i}.txt'))
@@ -53,7 +56,6 @@ for i in range(NFOLDS):
 # =============================================================================
 # SUBMISSION
 # =============================================================================
-
 submission = pd.read_csv(os.path.join(INPUTS_PATH, 'sample_submission.csv'))
 for i in range(NFOLDS):
     pred = pd.read_csv(os.path.join(OUTPUTS_PATH, f'prediction_fold{i}.txt'), header=None).rename(columns={0: 'target'}) 
