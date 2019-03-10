@@ -88,10 +88,10 @@ params_in_train = {
 
 params = {
     'boosting': 'gbdt',
-    'bootstrap_type': 'bayesian',
+    'bootstrap_type': 'Bayesian',
     'eval_metric': 'AUC',
     'objective': 'Logloss',
-    'iterations': 10000,
+    'iterations': 100000,
     'max_depth': 6,
     'learning_rate': 0.01,
     # 'subsample': 0.6,
@@ -117,10 +117,10 @@ for fold, (train_index, valid_index) in enumerate(skf.split(X, y)):
     
     model = CatBoost(params)
     model = model.fit(dtrain, eval_set=[dtrain, dvalid], **params_in_train)
-    oof[valid_index] = model.predict(dvalid, ntree_limit=model.best_ntree_limit)
+    oof[valid_index] = model.predict(dvalid)
     scores.append(roc_auc_score(y.iloc[valid_index], oof[valid_index])**0.5)
 
-    predictions += model.predict(cat.DMatrix(data=X_test), ntree_limit=model.best_ntree_limit) / NFOLDS
+    predictions += model.predict(Pool(data=X_test)) / NFOLDS
 
     del model
 

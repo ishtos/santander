@@ -170,7 +170,7 @@ logger.info('''
 
 submission = pd.read_csv(os.path.join(PATH, 'sample_submission.csv'))
 submission['target'] = predictions
-submission.to_csv('../submission/lightgbm.csv', index=False)
+submission.to_csv(os.path.join('..', 'submission', 'lightgbm.csv'), index=False)
 
 feature_importance_df['importance'] = feature_importance_df['importance'].astype('int')
 # mean = feature_importance_df['importance'].mean()
@@ -184,7 +184,7 @@ plot = sns.barplot(x='importance', y='feature', data=feature_importance_df, orde
 # plt.vlines(mean, -width, width, colors='red')
 # plt.vlines(mean+std, -width, width, colors='red', linestyles=':')
 fig = plot.get_figure()
-fig.savefig('./IMP_png/{}_IMP.png'.format(str(datetime.datetime.today().date()).replace('-', '')), bbox_inches='tight')
+fig.savefig(os.path.join('.', 'IMP_png', '{}_IMP.png'.format(str(datetime.datetime.today().date()).replace('-', '')), bbox_inches='tight')
 
 #==============================================================================
 utils.end(__file__)
