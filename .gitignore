@@ -117,3 +117,6 @@ feature/
 
 # submission
 submission/
+
+# py/catboost_info/
+py/catboost_info/*
