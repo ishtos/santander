@@ -54,7 +54,7 @@ SEED = 6
 
 NTHREAD = cpu_count()
 
-NFOLDS = 11
+NFOLDS = 5
 
 # =============================================================================
 # READ DATA
@@ -96,7 +96,7 @@ params = {
     'learning_rate': 0.01,
     # 'subsample': 0.6,
     'thread_count': cpu_count(),
-    'verbose': -1,
+    'verbose': 0,
     'random_seed': SEED, # int(2**fold_n),
 }
 

@@ -89,24 +89,16 @@ params_in_train = {
 params = {
     'boosting': 'gbdt',
     'metric': 'auc',
-    'objective': 'binary',
+    'objective': 'binary:logistic',
+    'silent': True,
     'max_depth': 6,
-    'num_leaves': 9,
     'min_data_in_leaf': 64,
-    'bagging_freq': 5,
     'learning_rate': 0.01,
-    'feature_fraction': 0.8,
-    'bagging_fraction': 0.8,
-    'sub_sample': 0.4,
-    'reg_alpha': 2,
-    'reg_lambda': 5,
-    'min_gain_to_split': 0.01,
-    'min_child_wight': 19,
-    'num_threads': cpu_count(),
-    'verbose': -1,
+    'subsample': 0.8,
+    'colsample_bytree': 0.4,
+    'nthread': cpu_count(),
+    'verbosity': 0,
     'seed': SEED, # int(2**fold_n),
-    'bagging_seed': SEED, # int(2**fold_n),
-    'drop_seed': SEED, # int(2**fold_n),
 }
 
 # =============================================================================
@@ -147,9 +139,7 @@ logger.info('''
 logger.info('Shape: {}'.format(X.shape))
 logger.info('Num folds: {}'.format(NFOLDS))
 logger.info('Train Scores: mean {:.5f}, max {:.5f}, min {:.5f}, std {:.5f}'.format(
-    np.mean(scores['train']), np.max(scores['train']), np.min(scores['train']), np.std(scores['train'])))
-logger.info('Valid Scores: mean {:.5f}, max {:.5f}, min {:.5f}, std {:.5f}'.format(
-    np.mean(scores['valid']), np.max(scores['valid']), np.min(scores['valid']), np.std(scores['valid'])))
+    np.mean(scores), np.max(scores), np.min(scores), np.std(scores)))
 logger.info('CV Score: {:<8.5f}'.format(cv_score))
 logger.info('''
 # ============================================================================= 
