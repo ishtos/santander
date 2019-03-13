@@ -70,6 +70,18 @@ test = pd.read_csv(os.path.join(PATH, 'test.csv'))
 #     train[column] = 1 / (train[column] + 1)
 #     test[column] = 1 / (test[column] + 1)
 
+# for column in train.columns[2:]:
+#     train[column] = np.log1p(train[column])
+#     test[column] = np.log1p(test[column])
+
+df = pd.concat([train, test], axis=0)
+for c in df.columns[2:]:
+    df[c] = df[c] / (df[c].max() - df[c].min())
+
+train = df[df['target'].notnull()]
+test = df[df['target'].isnull()]
+del df
+gc.collect()
 # =============================================================================
 # PREPROCESS
 # =============================================================================
