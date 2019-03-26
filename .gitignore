@@ -113,7 +113,7 @@ output/
 data/
 
 # feature
-feature/
+feature/*.csv
 
 # submission
 submission/
